@@ -1,12 +1,16 @@
+
 var express = require("express");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 const { response } = require("express");
+var fetch = require("node-fetch");
+
 
 
 var app = express();
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(express.static('public'));
 
 //connection to mongo
 const toDo = require("./models/todo.model");
@@ -21,7 +25,12 @@ var tasks = ["whats up", "task 2", "brs"];
 var completed = [];
 
 
-app.get("/", function(request, response)
+
+app.get('/zip', function(req, res)
+{
+    res.render('page');
+})
+app.get('/', function(request, response)
 {
     toDo.find(function(error, todo)
     {
@@ -50,6 +59,17 @@ app.get("/", function(request, response)
     //response.render("index", {tasks: tasks, completed: completed});
 });
 
+app.post('/zip', function(req, res){
+    fetch('https://api.zippopotam.us/',{
+        method: 'POST',
+        body: req,
+    })
+    .then(res => res.json())
+    .then(data => {
+
+    });
+
+})
 app.post("/addToDo", function(req, res)
 {
     let newToDo = new toDo
